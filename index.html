@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="tel"],
+        input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .success {
+            color: green;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #formMessage {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Registration Form</h1>
+    
+    <div class="form-container">
+        <form id="registrationForm" onsubmit="return validateForm(event)">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" onblur="validateName()">
+                <div id="nameError" class="error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" onblur="validateEmail()">
+                <div id="emailError" class="error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" onblur="validatePassword()">
+                <div id="passwordError" class="error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" onblur="validatePhone()">
+                <div id="phoneError" class="error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" onblur="validateDOB()">
+                <div id="dobError" class="error"></div>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+        
+        <div id="formMessage"></div>
+    </div>
+
+    <script>
+        function validateName() {
+            var name = document.getElementById("name").value.trim();
+            var nameError = document.getElementById("nameError");
+            
+            // Check if name has at least 3 alphabets
+            var alphabetCount = (name.match(/[a-zA-Z]/g) || []).length;
+            
+            if (name === "") {
+                nameError.textContent = "Name is required";
+                return false;
+            } else if (alphabetCount < 3) {
+                nameError.textContent = "Name must contain at least 3 alphabets";
+                return false;
+            } else if (/[0-9]/.test(name)) {
+                nameError.textContent = "Name cannot contain numbers";
+                return false;
+            } else if (/[^a-zA-Z\s]/.test(name)) {
+                nameError.textContent = "Name cannot contain special characters";
+                return false;
+            } else {
+                nameError.textContent = "";
+                return true;
+            }
+        }
+
+        function validateEmail() {
+            var email = document.getElementById("email").value.trim();
+            var emailError = document.getElementById("emailError");
+            var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            
+            if (email === "") {
+                emailError.textContent = "Email is required";
+                return false;
+            } else if (!emailPattern.test(email)) {
+                emailError.textContent = "Email must be in format username@domain.extension";
+                return false;
+            } else {
+                emailError.textContent = "";
+                return true;
+            }
+        }
+
+        function validatePassword() {
+            var password = document.getElementById("password").value;
+            var passwordError = document.getElementById("passwordError");
+            
+            if (password === "") {
+                passwordError.textContent = "Password is required";
+                return false;
+            } else if (password.length < 8) {
+                passwordError.textContent = "Password must be at least 8 characters long";
+                return false;
+            } else if (!/[A-Z]/.test(password)) {
+                passwordError.textContent = "Password must contain at least one uppercase letter";
+                return false;
+            } else if (!/[a-z]/.test(password)) {
+                passwordError.textContent = "Password must contain at least one lowercase letter";
+                return false;
+            } else if (!/[0-9]/.test(password)) {
+                passwordError.textContent = "Password must contain at least one number";
+                return false;
+            } else if (!/[^a-zA-Z0-9]/.test(password)) {
+                passwordError.textContent = "Password must contain at least one special character";
+                return false;
+            } else {
+                passwordError.textContent = "";
+                return true;
+            }
+        }
+
+        function validatePhone() {
+            var phone = document.getElementById("phone").value.trim();
+            var phoneError = document.getElementById("phoneError");
+            
+            if (phone === "") {
+                phoneError.textContent = "Phone number is required";
+                return false;
+            } else if (!/^\d+$/.test(phone)) {
+                phoneError.textContent = "Phone number must contain only numbers";
+                return false;
+            } else if (phone.length !== 10) {
+                phoneError.textContent = "Phone number must be exactly 10 digits";
+                return false;
+            } else {
+                phoneError.textContent = "";
+                return true;
+            }
+        }
+
+        function validateDOB() {
+            var dob = document.getElementById("dob").value;
+            var dobError = document.getElementById("dobError");
+            
+            if (dob === "") {
+                dobError.textContent = "Date of birth is required";
+                return false;
+            } else {
+                dobError.textContent = "";
+                return true;
+            }
+        }
+
+        function validateForm(event) {
+            event.preventDefault();
+            
+            var isNameValid = validateName();
+            var isEmailValid = validateEmail();
+            var isPasswordValid = validatePassword();
+            var isPhoneValid = validatePhone();
+            var isDOBValid = validateDOB();
+            
+            var formMessage = document.getElementById("formMessage");
+            
+            if (isNameValid && isEmailValid && isPasswordValid && isPhoneValid && isDOBValid) {
+                formMessage.textContent = "Form submitted successfully!";
+                formMessage.style.backgroundColor = "#d4edda";
+                formMessage.style.color = "#155724";
+                return true;
+            } else {
+                formMessage.textContent = "Please fix the errors before submitting";
+                formMessage.style.backgroundColor = "#f8d7da";
+                formMessage.style.color = "#721c24";
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>
